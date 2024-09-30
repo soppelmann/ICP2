@@ -5,9 +5,52 @@ import tb_pkg::*;
 //------------------------------------------------------------------------------------------------
 class RANDOMIZER;
     // Task 2: Modify this class so that we can randomize 
-    opcode op;
-    logic[7:0] operand_1;
-    logic[7:0] operand_2;
+    rand opcode op;
+    rand logic[7:0] operand_1;
+    rand logic[7:0] operand_2;
+
+    // Add constraints for opcodes and operands
+    constraint opcode_c { 
+        op inside {ADD, SUB, MUL, DIV, MOD}; // Allow only valid ALU opcodes
+    }
+
+    // Constraint for operands
+    constraint operand_1_c {
+        operand_1 >= 8'd0 && operand_1 <= 8'd255; // Full 8-bit range
+    }
+
+    constraint operand_2_c {
+        operand_2 >= 8'd0 && operand_2 <= 8'd255; // Full 8-bit range
+    }
+
+    // Special constraint for handling divide/modulo by zero when necessary
+    constraint no_div_by_zero {
+        if (op == DIV || op == MOD) {
+            operand_2 != 8'd0; // Ensure operand_2 is not zero for division or modulo
+        }
+    }
+
+    // Constraints for preventing overflow in ADD
+    constraint add_no_overflow {
+        if (op == ADD) {
+            operand_1 + operand_2 <= 8'd255; // Ensure no overflow for ADD
+        }
+    }
+
+
+    // Constraints for preventing underflow in SUB
+    constraint sub_no_underflow {
+        if (op == SUB) {
+            operand_1 >= operand_2; // Ensure no underflow for SUB
+        }
+    }
+
+    // Constraints for unsigned MUL preventing overflow
+    constraint mul_no_overflow {
+        if (op == MUL) {
+            operand_1 * operand_2 <= 8'd255;  // Prevent overflow for MUL
+        }
+    }
 endclass
 
 module simple_alu_tb;
@@ -118,10 +161,10 @@ module simple_alu_tb;
         tb_operand_1 <= a;
         tb_operand_2 <= b;
         tb_opcode<= code;
-        @(posedge tb_clock);
-        tb_operand_1 <= '0;
-        tb_operand_2 <= '0;
-        tb_start_bit <= 0;
+        //@(posedge tb_clock);
+        //tb_operand_1 <= '0;
+        //tb_operand_2 <= '0;
+        //tb_start_bit <= 0;
     endtask
 
     //------------------------------------------------------------------------------
@@ -134,8 +177,49 @@ module simple_alu_tb;
             bins reset = { 0 };
             bins run=    { 1 };
         }
-    //Task 3: Expand our coverage...
-    
+        //Task 3: Expand our coverage...
+        // Coverpoint for the opcode (mode_select)
+        cp_opcode: coverpoint tb_opcode {
+            bins ADD = {ADD};
+            bins SUB = {SUB};
+            bins MUL = {MUL};
+            bins DIV = {DIV};
+            bins MOD = {MOD};
+        }
+
+        // Coverpoint for operand a
+        cp_operand_a: coverpoint tb_operand_1 {
+            bins zero_a = {8'd0};               // Zero value
+            bins max_a = {8'hFF};               // Maximum 8-bit value
+            bins mid_a = {8'd127};              // Midpoint
+            bins min_a = {8'd1};                // Minimum positive value
+            bins lower_range_a[7] = {[2:126]};    // Lower range
+            bins upper_range_a[7] = {[128:254]};  // Upper range
+        }
+
+        // Coverpoint for operand b
+        cp_operand_b: coverpoint tb_operand_2 {
+            bins zero_b = {8'd0};              // Zero value (important for division)
+            bins max_b = {8'hFF};               // Maximum 8-bit value
+            bins mid_b = {8'd127};              // Midpoint
+            bins min_b = {8'd1};                // Minimum positive value
+            bins lower_range_b[7] = {[2:126]};    // Lower range
+            bins upper_range_b[7] = {[128:254]};  // Upper range
+        }
+
+        // Cross coverpoints to ensure combinations of `a` and `b` are covered
+        cp_cross_a: cross cp_operand_a, cp_opcode;
+        cp_cross_b: cross cp_operand_b, cp_opcode;
+
+        // Coverpoint for output `c`
+        cp_output_c: coverpoint tb_result {
+            bins zero_output = {8'd0};          // Zero result
+            bins max_output = {8'hFF};          // Maximum result
+            bins lower_range_output[7] = {[2:126]};    // Lower range
+            bins upper_range__output[7] = {[128:254]};  // Upper range
+        }
+        cp_cross_result: cross tb_result, cp_opcode;
+
 
     //Task 5: Add some crosses aswell to get some granularity going!
     endgroup: basic_fcov
@@ -153,8 +237,14 @@ module simple_alu_tb;
     task test_case();
         reset(.delay(0), .length(2));
 
-        repeat(2)
-        do_math(1,2,ADD);
+        //Cover all op codes
+        for (int i = ADD; i <= MOD; i++) begin
+            do_math(randy.operand_1, randy.operand_2, opcode'(i));
+        end
+
+        repeat(6000) begin
+            do_math(randy.operand_1, randy.operand_2, randy.op);
+        end
 
         reset(.delay(10), .length(2));
         // Task 1: The DUT is causing this assertion to be hit...

@@ -21,7 +21,7 @@ module simple_alu(
     always_ff @(posedge clock or negedge reset_n) begin
         // Asynchronous reset
         if(~reset_n) begin
-            
+            internal_result <= 0;
         end
         else begin
             internal_result <= n_internal_result;
