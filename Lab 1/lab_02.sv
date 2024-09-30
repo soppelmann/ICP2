@@ -1,8 +1,6 @@
 module lab_02;
 
     int result;
-
-
     class Packet;
         logic [3:0] non_random;  // Non-random member (not affected by randomize)
 
@@ -11,7 +9,7 @@ module lab_02;
         rand logic [7:0] payload [];
 
         constraint payload_size {payload.size > 0; payload.size < 15;}
-        // constraint payload_size_conflict {payload.size == 5;}
+        //constraint payload_size_conflict {payload.size == 5;}
     endclass
 
 
@@ -30,6 +28,11 @@ module lab_02;
         constraint address_rule {addr[7:0] == 'h01;}
         constraint data_rule1 {data[15:0] == 'hffff;}
         constraint data_rule2 {data[31:16] > 'hafff;}
+    endclass
+
+    class SpecialBus extends Bus;
+        constraint address_rule {addr[7:0] != 'hff;}
+        constraint address_rule2 {addr[7:0] < 'h11 || addr[7:0] > 'h77;}
     endclass
 
 
@@ -62,8 +65,29 @@ module lab_02;
                 $displayh("%p", packet);
             end
             $display("");
-        endtask;
+        endtask
     endclass: Test1
+
+    
+    class Task2;
+        task run;
+            Packet packet;
+            packet = new();
+            packet.dest.rand_mode(0);
+            $display("Task2 :");
+            repeat(8) begin
+                result = packet.randomize with {
+                    packet.src inside {[4'h0:4'hf]};
+            
+                    foreach (packet.payload[i]) {
+                        packet.payload[i] inside {['h0:'hff]};
+                    }
+                };  
+                $displayh("%p", packet);              
+            end
+            $display("");
+        endtask    
+    endclass: Task2
 
 
     class Test2;
@@ -76,7 +100,7 @@ module lab_02;
                 $displayh("%p", packet);
             end
             $display("");
-        endtask;
+        endtask
     endclass: Test2
 
 
@@ -90,7 +114,7 @@ module lab_02;
                 $displayh("%p", bus);
             end
             $display("");
-        endtask;
+        endtask
     endclass: Test3
 
 
@@ -104,18 +128,33 @@ module lab_02;
             
             repeat(4) begin
                 result = bus.randomize();
-                $displayh("%p", bus);
+                $displayh("%h", bus);
             end
 
             bus.data_rule1.constraint_mode(1);  // Turn constraint back on
 
             repeat(4) begin
                 result = bus.randomize();
-                $displayh("%p", bus);
+                $displayh("%h", bus);
             end
             $display("");
-        endtask;
+        endtask
     endclass: Test4
+
+    class Task3;
+        task run;
+            SpecialBus bus;
+            bus = new();
+
+            bus.data_rule1.constraint_mode(0);
+            $display("Task 3:");
+            repeat(8) begin
+               result = bus.randomize();
+               $displayh("%p", bus); 
+            end
+            $display("");
+        endtask
+    endclass: Task3
 
 
     class Test5;
@@ -125,10 +164,10 @@ module lab_02;
 
             repeat(16) begin
                 result = c.randomize();
-                $displayh("%p", c);
+                $displayh("%h", c);
             end
             $display("");
-        endtask;
+        endtask
     endclass: Test5
 
 
@@ -150,7 +189,8 @@ module lab_02;
         Test4 test4;
         Test5 test5;
         Test6 test6;
-
+        Task2 task2;
+        Task3 task3;
 
         test1 = new();
         test1.run();        
@@ -172,14 +212,22 @@ module lab_02;
 
         // Task 1
         // Uncomment the line in the "Packet" class containing the "payload_size_conflict" constraint and see what transpires. What on earth is happening?
-
+        /*
+         * constraint payload_size {payload.size > 0; payload.size < 15;}
+         * constraint payload_size_conflict {payload.size == 5;}
+         * Here We have conflicting constraints. One constraint is saying that the payload.size shall be in the range (0, 15)
+         * The other constraint is saying that the payload.size shall be 5
+         * As a result the compiler does not know what to do with the payload.size.
+         */
         // Task 2
         // Create a class named "Task2" and in its "run" task call "randomize" in a way to only apply randomization to "src" and "payload" members of "Packet"
-
+        task2 = new();
+        task2.run();
         // Task 3
         // Create a class named "MyBus" that extends "Bus" and change its "address_rule" so that "addr[7:0]" can not be 8'hff and also not in the range 8'h11:8'h77
         // Randomize and test "MyBus" in a new class named "Task3", but turn off "data_rule1"
-
+        task3 = new();
+        task3.run();
     end
 
 endmodule

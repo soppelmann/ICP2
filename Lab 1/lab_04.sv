@@ -53,6 +53,37 @@ module lab_04 #(parameter PERIOD = 10) (
     // But if a and c are high this cycle and reset happens we don't care about b anymore
     assert_6 : assert property ( @(posedge clk) disable iff (reset) (a && c) |-> ##2 b );
 
+    //Assert if b,c and d are high this cycle, then 2 cycles later d must be high
+    property b_c_d_checker;
+        @(posedge clk) ((b && c && d) |=> ##2 d);
+    endproperty
+
+    assert_task1 : assert property (b_c_d_checker) $display("Task 1 case happened"); else $warning("Task 1 case did not happen");
+
+    property b_c_d_checker_reset;
+        @(posedge clk) disable iff (reset) ((b && c && d) |=> ##2 d);
+    endproperty
+
+    assert_task2 : assert property (b_c_d_checker_reset) $display("Task 2 case happened"); else $warning("Task 2 case did not happen");
+
+    property data200_clk;
+        @(posedge clk) data <= 200;
+    endproperty
+
+    assert_task3 : assert property (data200_clk) $display("Task 3 case happened"); else $warning("Task 3 case did not happen");
+
+    sequence seq_a_b_c_d;
+        @(posedge clk) a  ##1
+        @(posedge clk) b  ##1
+        @(posedge clk) c  ##1
+        @(posedge clk) d;
+    endsequence
+
+    property a_b_c_d_checker;
+        seq_a_b_c_d;
+    endproperty
+
+    assert_task4: assert property(a_b_c_d_checker) $display("Task 4 case happened"); else $warning("Task 4 case did not happen");
 
     initial begin
         reset = 0;
@@ -96,7 +127,7 @@ module lab_04 #(parameter PERIOD = 10) (
         d = 0;
         data = 210;
 
-        #10
+        #10 
         c = 1;
         d = 1;
         data = 180;
@@ -110,17 +141,64 @@ module lab_04 #(parameter PERIOD = 10) (
 
         // Task 1
         // Add an assertion that checks if b, c, and d are high this cycle, then d must be high 2 cycles later
+        #10
+        b = 1;
+        c = 1;
+        d = 1;
 
+        #10
+        d = 0;
+        
+        #20
+
+        #10
+        b = 1;
+        c = 1;
+        d = 1;
+
+        #20
         // Task 2
         // Same as Task 1 except that reset disables the check
+        #10
+        b = 1;
+        c = 1;
+        d = 1;
 
+        #10
+        d = 0;
+        reset = 1;
+        #10
+        reset = 0;
+
+        #20
+        b = 1;
+        c = 1;
+        d = 1;
+
+        #10
+        reset = 1;
+
+        #10
+        reset = 0;
+
+        #10
         // Task 3
         // Add an assertion that checks data <= 200 at positive clock edges
 
         // Task 4
         // Add an assertion that checks if a is high this cycle, and c is high the cycle after, and b is high 2 cycles after a was high, then d must be high 3 cycles after a was high
         // So for example if a is high at cycle 1 and c is high at cycle 2 and b is high at cycle 3 then d must be high at cycle 4
-
+        #10
+        a = 1;
+        #10
+        b = 1;
+        #10
+        c = 1;
+        #10
+        d = 1;
+        #10
+        
+         $stop;
     end
 
 endmodule

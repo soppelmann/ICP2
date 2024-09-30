@@ -12,7 +12,7 @@ module lab_05 #(parameter PERIOD = 10) (
     logic [7:0] data;
 
 
-    typedef enum logic [2:0] { ADD, SUB, AND, OR, XOR, MUL, DIV, MOD } operations_t;
+    typedef enum logic [2:0] { ADD, SUB, AND, OR, XOR, MUL, DIV, MOD } operations_t;   
     typedef enum logic [1:0] { REG0, REG1, REG2, REG3 } registers_t;
 
     operations_t my_operation;
@@ -34,7 +34,7 @@ module lab_05 #(parameter PERIOD = 10) (
     covergroup covergroup_2 @(posedge clk);
         c1: coverpoint address;  // This creates automatic bins (7 bins)
         c2: coverpoint data {
-            bins data_bin[] = { 0, 1, 2, 5, 100 };  // This creates custom bins (5 bins)
+            bins data_bin = { 0, 1, 2, 5, 100 };  // This creates custom bins (5 bins)
         }
     endgroup: covergroup_2
 
@@ -43,7 +43,9 @@ module lab_05 #(parameter PERIOD = 10) (
         c1: coverpoint address;  // This creates automatic bins (7 bins)
         c2: coverpoint data {
             bins data_bin[] = { 0, 1, 2, 5, 100 };  // This creates custom bins (5 bins)
-            bins data_bin_rest = default;  // This creates 1 bin for all the remaining values
+            bins data_bin_3_4 = { [3:4] };  // Bin 3:4
+            bins data_bin_6_99 = { [6:99] };  // Bin 6:99
+            bins data_bin_101_255 = { [101:255] };  // Bin 101:255
         }
     endgroup: covergroup_3
 
@@ -73,6 +75,7 @@ module lab_05 #(parameter PERIOD = 10) (
 
     initial begin
         #10 address = 0;
+        #10 address = 1;
         #10 address = 2;
         #10 address = 3;
         #10 address = 4;
@@ -80,7 +83,7 @@ module lab_05 #(parameter PERIOD = 10) (
         #10 address = 6;
         #10 address = 7;
 
-        for (int i = 0; i < 200; i++) begin
+        for (int i = 0; i < 255; i++) begin
             #10ns;
             data = i;
         end
@@ -92,18 +95,19 @@ module lab_05 #(parameter PERIOD = 10) (
         // Change covergroup_2's data coverpoint so that it only creates 1 bin for { 0, 1, 2, 5, 100 } instead of 5 individual bins
 
         // Task 3
-        // Change covergroup_3 and achieve the same functionality without using the 'default' keyword        
+        // Change covergroup_3 and achieve the same functionality without using the 'default' keyword    
+        $stop;   
     end
 
 
     initial begin
-        for (operations_t op = my_operation.first; op < my_operation.last; op = op.next) begin            
-            my_operation = op;
-            for (registers_t register = my_register.first; register < my_register.last; register = my_register.next) begin
-                my_register = register;
+        for (int i = ADD; i <= MOD; i++) begin            
+            my_operation = operations_t'(i);
+            for (int j = REG0; j <= REG3; j++) begin
+                my_register = registers_t'(j);
                 #10ns;
-                $display(register);
-            end           
+                $display(my_register);
+            end  
         end
 
         // Task 4
