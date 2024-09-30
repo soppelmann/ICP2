@@ -34,7 +34,7 @@ module lab_05 #(parameter PERIOD = 10) (
     covergroup covergroup_2 @(posedge clk);
         c1: coverpoint address;  // This creates automatic bins (7 bins)
         c2: coverpoint data {
-            bins data_bin = { 0, 1, 2, 5, 100 };  // This creates custom bins (5 bins)
+            bins data_bin = { 0, 1, 2, 5, 100 };  // This creates custom bins (1 bins)
         }
     endgroup: covergroup_2
 
@@ -43,10 +43,8 @@ module lab_05 #(parameter PERIOD = 10) (
         c1: coverpoint address;  // This creates automatic bins (7 bins)
         c2: coverpoint data {
             bins data_bin[] = { 0, 1, 2, 5, 100 };  // This creates custom bins (5 bins)
-            bins data_bin_3_4 = { [3:4] };  // Bin 3:4
-            bins data_bin_6_99 = { [6:99] };  // Bin 6:99
-            bins data_bin_101_255 = { [101:255] };  // Bin 101:255
-        }
+            bins data_bin_default = { [3:4], [6:99], [101:255] };  // Bin 3:4
+          }
     endgroup: covergroup_3
 
 

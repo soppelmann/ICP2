@@ -26,8 +26,11 @@ module lab_03;
             #20 $display("Main - thread @ line %0d @ time %0t", `__LINE__, $time);
 
             fork
+			begin
                 #60 $display("Fork - thread 1 @ line %0d @ time %0t", `__LINE__, $time);
-            join
+                #10 $display("Fork - thread 2 @ line %0d @ time %0t", `__LINE__, $time);
+			end 
+           join
 
             #10 $display("Main - thread @ line %0d @ time %0t", `__LINE__, $time);
             #100 $display("Main - thread @ line %0d @ time %0t", `__LINE__, $time);

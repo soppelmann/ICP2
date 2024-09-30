@@ -31,8 +31,8 @@ module lab_02;
     endclass
 
     class SpecialBus extends Bus;
-        constraint address_rule {addr[7:0] != 'hff;}
-        constraint address_rule2 {addr[7:0] < 'h11 || addr[7:0] > 'h77;}
+        constraint address_rule {addr[7:0] != 'hff || addr[7:0] < 'h11 || addr[7:0] > 'h77;}
+        //constraint address_rule2 {addr[7:0] < 'h11 || addr[7:0] > 'h77;}
     endclass
 
 
@@ -212,13 +212,10 @@ module lab_02;
 
         // Task 1
         // Uncomment the line in the "Packet" class containing the "payload_size_conflict" constraint and see what transpires. What on earth is happening?
-        /*
-         * constraint payload_size {payload.size > 0; payload.size < 15;}
-         * constraint payload_size_conflict {payload.size == 5;}
-         * Here We have conflicting constraints. One constraint is saying that the payload.size shall be in the range (0, 15)
-         * The other constraint is saying that the payload.size shall be 5
-         * As a result the compiler does not know what to do with the payload.size.
-         */
+
+	// a bunch of errors as we have conflicting constraints!
+	// the compiler errors out as it doesnt know what to do with payload.size
+
         // Task 2
         // Create a class named "Task2" and in its "run" task call "randomize" in a way to only apply randomization to "src" and "payload" members of "Packet"
         task2 = new();

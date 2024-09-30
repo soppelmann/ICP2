@@ -44,6 +44,51 @@ module lab_01;
     end
 
 
+    function void randomize_my_state_excl_start;
+        $display("Randomize 'my_state' excluding START");
+        repeat(16) begin
+            result = randomize(my_state) with { 
+                my_state != START; 
+            };
+            $display(my_state.name);
+        end
+        $display("");
+    endfunction
+
+
+    function void randomize_data_with_task_2_constraints;
+        int range;
+        $display("Randomize 'data' with task 2 constraints");
+        repeat(16) begin
+            //Randomly select the range
+
+            result = randomize(data) with {
+                data dist { [0:10] :/ 2, [200:$] :/ 1 };
+            };
+            $display(data);
+        end
+        $display("");
+    endfunction
+
+
+    function void randomize_data_with_task_3_conditional_constraints;
+        int range;
+        $display("Randomize 'data' with task 3 conditional constraints");
+        repeat(16) begin
+            //Randomly select the range
+
+            result = randomize(data) with {
+            if (my_state inside { [S1:S6] } )
+                    data dist { [50:60] :/ 1, [100:150] :/ 1 };
+            else
+                    data < 20;
+            
+            };
+            $display(data);
+        end
+        $display("");
+    endfunction
+
     function void randomize_data;
         $display("Randomize 'data'");
         repeat(16) begin
@@ -76,27 +121,6 @@ module lab_01;
         $display("");
     endfunction
 
-    function void randomize_data_with_task_2_constraints;
-        int range;
-        $display("Randomize 'data' with task 2 constraints");
-        repeat(16) begin
-            //Randomly select the range
-            range = $urandom_range(0, 2);
-            //Generate random data based on range
-            if (range < 2) begin
-                result = randomize(data) with { 
-                    data <= 10; 
-                };
-            end else begin
-                result = randomize(data) with { 
-                    data >= 200; 
-                };
-            end
-            $display(data);
-        end
-        $display("");
-    endfunction
-
 
     function void randomize_my_state_with_constraints;
         $display("Randomize 'my_state' with constraints");
@@ -114,16 +138,6 @@ module lab_01;
     endfunction
 
        
-    function void randomize_my_state_excl_start;
-        $display("Randomize 'my_state' excluding START");
-        repeat(16) begin
-            result = randomize(my_state) with { 
-                my_state != START; 
-            };
-            $display(my_state.name);
-        end
-        $display("");
-    endfunction
 
 
     function void randomize_my_state_with_dist_constraints;
@@ -153,28 +167,5 @@ module lab_01;
         $display("");
     endfunction
 
-    function void randomize_data_with_task_3_conditional_constraints;
-        int range;
-        $display("Randomize 'data' with task 3 conditional constraints");
-        repeat(16) begin
-            //Randomly select the range
-            range = $urandom_range(0, 1);
-            //Generate random data based on range
-            if (range == 0) begin
-                result = randomize(data) with {
-                    (my_state == INIT || my_state == START) -> data < 20;
-                    (my_state == S1 || my_state == S2 || my_state == S3 || my_state == S4 || my_state == S5 || my_state == S6) -> (50 <= data && data <= 60);
-
-                };
-            end else begin
-                result = randomize(data) with { 
-                    (my_state == INIT || my_state == START) -> data < 20;
-                    (my_state == S1 || my_state == S2 || my_state == S3 || my_state == S4 || my_state == S5 || my_state == S6) -> (100 <= data && data <= 150);
-                };
-            end
-            $display(data);
-        end
-        $display("");
-    endfunction
 
 endmodule
