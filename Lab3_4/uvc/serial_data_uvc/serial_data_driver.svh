@@ -71,39 +71,46 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
                                                   ), UVM_FULL)
                end
 
-
                //TASK 3: Implement a 9th bit if parity_enable is enabled.
                // countones thingy
+               // seq_item has a parity_error bit
                if (m_config.parity_enable) begin
-                        //bits = (m_config.parity_enable ? 9 : 8);
-               end
+                  int num_of_ones = $countones(seq_item.serial_data);
+                  if (num_of_ones % 2 == 0) begin
+                     parity_bit = 1;
+                  end
 
+                  //TASK 4: If the seq_item parity error is 1, flip the parity_bit.
+                  if (seq_item.parity_error) begin
+                     parity_bit =~ parity_bit;
+                  end // if(seq_item.parity)
 
-               
-
-
-               //TASK 4: If the seq_item parity error is 1, flip the parity_bit.
-
-            end
-            begin
-               `uvm_info(get_name(), $sformatf(
-                                               "Starting start_bit delay=%0d length=%0d",
-                                               seq_item.start_bit_delay,
-                                               seq_item.start_bit_length
-                                               ), UVM_FULL)
-               for (int ii = 0; ii < seq_item.start_bit_delay; ii++) begin
+                  // code below does this, im assuming this is how the bit is added
                   @(posedge m_config.m_vif.clk);
+                  m_config.m_vif.serial_data <= parity_bit;
+                  `uvm_info(get_name(), $sformatf("Parity bit added: %0d", parity_bit), UVM_FULL)
+                  end
+                    
                end
-               @(posedge m_config.m_vif.clk);
-               m_config.m_vif.start_bit <= 1;
-               `uvm_info(get_name(), $sformatf("Start bit activated"), UVM_FULL)
-               for (int ii = 0; ii < seq_item.start_bit_length; ii++) begin
+               begin
+                  `uvm_info(get_name(), $sformatf(
+                                                  "Starting start_bit delay=%0d length=%0d",
+                                                  seq_item.start_bit_delay,
+                                                  seq_item.start_bit_length
+                                                  ), UVM_FULL)
+                  for (int ii = 0; ii < seq_item.start_bit_delay; ii++) begin
+                     @(posedge m_config.m_vif.clk);
+                  end
                   @(posedge m_config.m_vif.clk);
+                  m_config.m_vif.start_bit <= 1;
+                  `uvm_info(get_name(), $sformatf("Start bit activated"), UVM_FULL)
+                  for (int ii = 0; ii < seq_item.start_bit_length; ii++) begin
+                     @(posedge m_config.m_vif.clk);
+                  end
+                  m_config.m_vif.start_bit <= 0;
+                  `uvm_info(get_name(), $sformatf("Start bit deactivated"), UVM_FULL)
                end
-               m_config.m_vif.start_bit <= 0;
-               `uvm_info(get_name(), $sformatf("Start bit deactivated"), UVM_FULL)
-            end
-         join
+            join
          seq_item_port.put(seq_item);
       end
    endtask : run_phase

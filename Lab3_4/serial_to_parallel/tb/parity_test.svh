@@ -34,6 +34,13 @@ class parity_test extends base_test;
     virtual function void build_phase(uvm_phase phase);
 
         //TASK 6: Enable parity on DUT in the test. This is gonna be a lot of code...
+       // funny joke, we just extend!
+
+       
+       
+       
+       
+       
         // Create and build TB environment as defined in base test
         super.build_phase(phase);
     endfunction : build_phase

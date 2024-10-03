@@ -151,6 +151,7 @@ class scoreboard extends uvm_component;
         `uvm_info(get_name(),$sformatf("PARALLEL_DATA_MONITOR:\n%s",item.sprint()),UVM_HIGH)
         // Sample coverage
         data = item.data;
+       // why is this commented?
         //parity_error = item.parity_error;
         data_queue_numbers = data_queue.size();
         data_valid = 1;
