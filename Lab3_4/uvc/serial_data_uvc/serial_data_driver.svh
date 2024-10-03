@@ -47,20 +47,19 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
       // Reset signals
       m_config.m_vif.start_bit <= 0;
       m_config.m_vif.serial_data <= 0;
-      //TASK 1: Add a parity_enable signal:
-      m_config.m_vif.parity_enable <= m_config.parity_testing;
-      //
+      //TASK 1: Add a parity_enable signal: //should this be 0 maybe?
+      m_config.m_vif.parity_enable <= m_config.parity_enable;
 
       forever begin
          // Wait for sequence item
          seq_item_port.get(seq_item);
          // Perform the requested action and send response back.
          `uvm_info(get_name(), $sformatf(
-                   "Start serial interface transaction. Delay start bit=%0d  Start bit length=%0d  Serial data=%08b",
-                   seq_item.start_bit_delay,
-                   seq_item.start_bit_length,
-                   seq_item.serial_data
-                   ), UVM_HIGH)
+                                         "Start serial interface transaction. Delay start bit=%0d  Start bit length=%0d  Serial data=%08b",
+                                         seq_item.start_bit_delay,
+                                         seq_item.start_bit_length,
+                                         seq_item.serial_data
+                                         ), UVM_HIGH)
          fork
             begin
                bit parity_bit = 0;
@@ -68,12 +67,18 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
                   @(posedge m_config.m_vif.clk);
                   m_config.m_vif.serial_data <= seq_item.serial_data[nn];
                   `uvm_info(get_name(), $sformatf(
-                            "Sending serial_data. Bitno=%0d Data=%0d", nn, seq_item.serial_data[nn]
-                            ), UVM_FULL)
+                                                  "Sending serial_data. Bitno=%0d Data=%0d", nn, seq_item.serial_data[nn]
+                                                  ), UVM_FULL)
                end
 
 
                //TASK 3: Implement a 9th bit if parity_enable is enabled.
+               // countones thingy
+               if (m_config.parity_enable) begin
+                        //bits = (m_config.parity_enable ? 9 : 8);
+               end
+
+
                
 
 
@@ -82,10 +87,10 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
             end
             begin
                `uvm_info(get_name(), $sformatf(
-                         "Starting start_bit delay=%0d length=%0d",
-                         seq_item.start_bit_delay,
-                         seq_item.start_bit_length
-                         ), UVM_FULL)
+                                               "Starting start_bit delay=%0d length=%0d",
+                                               seq_item.start_bit_delay,
+                                               seq_item.start_bit_length
+                                               ), UVM_FULL)
                for (int ii = 0; ii < seq_item.start_bit_delay; ii++) begin
                   @(posedge m_config.m_vif.clk);
                end
