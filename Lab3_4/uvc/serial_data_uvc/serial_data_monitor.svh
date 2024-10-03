@@ -84,8 +84,8 @@ class serial_data_monitor  extends uvm_monitor;
                         serial_data_seq_item  seq_item;
                         int bits;
                         bit parity_error;
-                        //bits = (m_config.parity_enable ? 9 : 8);
-                        bits = 8;
+                        bits = (m_config.parity_enable ? 9 : 8);
+                        //bits = 8;
                         check_process = process::self();
                         for (int nn=0; nn<bits; nn++) begin
                             // Wait for start bit to be set

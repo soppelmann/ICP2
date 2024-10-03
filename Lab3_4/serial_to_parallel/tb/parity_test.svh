@@ -18,32 +18,39 @@
 //------------------------------------------------------------------------------
 class parity_test extends base_test;
     `uvm_component_utils(parity_test)
-
+      
+   // Testbench top configuration object with all setup for the TB
+   //top_config m_top_config;
+   // Testbench environment
+   //tb_env m_tb_env;
     //------------------------------------------------------------------------------
     // FUNCTION: new
     // Creates and constructs the sequence.
     //------------------------------------------------------------------------------
-    function new (string name = "test",uvm_component parent = null);
-        super.new(name,parent);
-    endfunction : new
+   function new (string name = "test",uvm_component parent = null);
+      super.new(name,parent);
+      endfunction : new
 
     //------------------------------------------------------------------------------
     // FUNCTION: build_phase
     // Function to build the class within UVM build phase.
     //------------------------------------------------------------------------------
-    virtual function void build_phase(uvm_phase phase);
+   virtual function void build_phase(uvm_phase phase);
 
-        //TASK 6: Enable parity on DUT in the test. This is gonna be a lot of code...
-       // funny joke, we just extend!
+      //TASK 6: Enable parity on DUT in the test. This is gonna be a lot of code...
+      // funny joke, we just extend using inheritance
 
-       
-       
-       
-       
-       
-        // Create and build TB environment as defined in base test
-        super.build_phase(phase);
-    endfunction : build_phase
+      // we extend base_test which has
+      // top_config m_top_config;
+      // in which we want to set m_serial_data_config.parity_enable = 1;
+      // its something like this
+      
+      // Create and build TB environment as defined in base test
+      super.build_phase(phase);
+      m_top_config = top_config::type_id::create("m_top_config", this);
+      m_top_config.m_serial_data_config.parity_enable = 1;
+      super.m_top_config.m_serial_data_config.parity_enable = 1;
+   endfunction : build_phase
 
     //------------------------------------------------------------------------------
     // FUNCTION: run_phase

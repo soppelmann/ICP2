@@ -49,6 +49,7 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
       m_config.m_vif.serial_data <= 0;
       //TASK 1: Add a parity_enable signal: //should this be 0 maybe?
       m_config.m_vif.parity_enable <= m_config.parity_enable;
+      //m_config.m_vif.parity_enable <= 1;
 
       forever begin
          // Wait for sequence item
@@ -62,6 +63,7 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
                                          ), UVM_HIGH)
          fork
             begin
+
                bit parity_bit = 0;
                for (int nn = 0; nn < 8; nn++) begin
                   @(posedge m_config.m_vif.clk);
@@ -87,7 +89,7 @@ class serial_data_driver extends uvm_driver #(serial_data_seq_item);
 
                   // code below does this, im assuming this is how the bit is added
                   @(posedge m_config.m_vif.clk);
-                  m_config.m_vif.serial_data <= parity_bit;
+                  m_config.m_vif.serial_data <= parity_bit; //serial_data[nn] ???
                   `uvm_info(get_name(), $sformatf("Parity bit added: %0d", parity_bit), UVM_FULL)
                   end
                     
