@@ -1,0 +1,224 @@
+Coverage Report by instance with details
+
+=================================================================================
+=== Instance: /tb_pkg
+=== Design Unit: work.tb_pkg
+=================================================================================
+
+Covergroup Coverage:
+    Covergroups                      1        na        na   100.00%
+        Coverpoints/Crosses          7        na        na        na
+            Covergroup Bins         64        64         0   100.00%
+----------------------------------------------------------------------------------------------------------
+Covergroup                                             Metric       Goal       Bins    Status               
+                                                                                                         
+----------------------------------------------------------------------------------------------------------
+ TYPE /tb_pkg/scoreboard/serial_to_parallel_covergrp 
+                                                      100.00%        100          -    Covered              
+    covered/total bins:                                    64         64          -                      
+    missing/total bins:                                     0         64          -                      
+    % Hit:                                            100.00%        100          -                      
+    Coverpoint reset                                  100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin reset                                         801          1          -    Covered              
+        bin run                                           801          1          -    Covered              
+    Coverpoint transmission                           100.00%        100          -    Covered              
+        covered/total bins:                                 3          3          -                      
+        missing/total bins:                                 0          3          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin ilde                                         2319          1          -    Covered              
+        bin active                                        595          1          -    Covered              
+        bin start_bit                                     762          1          -    Covered              
+    Coverpoint parity_error                           100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin ok                                            325          1          -    Covered              
+        bin error                                         312          1          -    Covered              
+    Coverpoint data                                   100.00%        100          -    Covered              
+        covered/total bins:                                16         16          -                      
+        missing/total bins:                                 0         16          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin bit0_passive                                  304          1          -    Covered              
+        bin bit1_passive                                  332          1          -    Covered              
+        bin bit2_passive                                  315          1          -    Covered              
+        bin bit3_passive                                  335          1          -    Covered              
+        bin bit4_passive                                  320          1          -    Covered              
+        bin bit5_passive                                  302          1          -    Covered              
+        bin bit6_passive                                  312          1          -    Covered              
+        bin bit7_passive                                  308          1          -    Covered              
+        bin bit0_active                                   333          1          -    Covered              
+        bin bit1_active                                   305          1          -    Covered              
+        bin bit2_active                                   322          1          -    Covered              
+        bin bit3_active                                   302          1          -    Covered              
+        bin bit4_active                                   317          1          -    Covered              
+        bin bit5_active                                   335          1          -    Covered              
+        bin bit6_active                                   325          1          -    Covered              
+        bin bit7_active                                   329          1          -    Covered              
+    Coverpoint transmission_state                     100.00%        100          -    Covered              
+        covered/total bins:                                 3          3          -                      
+        missing/total bins:                                 0          3          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[IDLE]                                   2319          1          -    Covered              
+        bin auto[START_BIT]                               762          1          -    Covered              
+        bin auto[ACTIVE]                                  595          1          -    Covered              
+    Cross state_cross                                 100.00%        100          -    Covered              
+        covered/total bins:                                 6          6          -                      
+        missing/total bins:                                 0          6          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <auto[ACTIVE],run>                         18          1          -    Covered              
+            bin <auto[START_BIT],run>                      25          1          -    Covered              
+            bin <auto[IDLE],run>                          758          1          -    Covered              
+            bin <auto[ACTIVE],reset>                       13          1          -    Covered              
+            bin <auto[START_BIT],reset>                    19          1          -    Covered              
+            bin <auto[IDLE],reset>                        769          1          -    Covered              
+    Cross parity_cross                                100.00%        100          -    Covered              
+        covered/total bins:                                32         32          -                      
+        missing/total bins:                                 0         32          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <bit7_active,error>                       161          1          -    Covered              
+            bin <bit6_active,error>                       160          1          -    Covered              
+            bin <bit5_active,error>                       164          1          -    Covered              
+            bin <bit4_active,error>                       171          1          -    Covered              
+            bin <bit3_active,error>                       160          1          -    Covered              
+            bin <bit2_active,error>                       175          1          -    Covered              
+            bin <bit1_active,error>                       165          1          -    Covered              
+            bin <bit0_active,error>                       179          1          -    Covered              
+            bin <bit7_passive,error>                      151          1          -    Covered              
+            bin <bit6_passive,error>                      152          1          -    Covered              
+            bin <bit5_passive,error>                      148          1          -    Covered              
+            bin <bit4_passive,error>                      141          1          -    Covered              
+            bin <bit3_passive,error>                      152          1          -    Covered              
+            bin <bit2_passive,error>                      137          1          -    Covered              
+            bin <bit1_passive,error>                      147          1          -    Covered              
+            bin <bit0_passive,error>                      133          1          -    Covered              
+            bin <bit7_active,ok>                          168          1          -    Covered              
+            bin <bit6_active,ok>                          165          1          -    Covered              
+            bin <bit5_active,ok>                          171          1          -    Covered              
+            bin <bit4_active,ok>                          146          1          -    Covered              
+            bin <bit3_active,ok>                          142          1          -    Covered              
+            bin <bit2_active,ok>                          147          1          -    Covered              
+            bin <bit1_active,ok>                          140          1          -    Covered              
+            bin <bit0_active,ok>                          154          1          -    Covered              
+            bin <bit7_passive,ok>                         157          1          -    Covered              
+            bin <bit6_passive,ok>                         160          1          -    Covered              
+            bin <bit5_passive,ok>                         154          1          -    Covered              
+            bin <bit4_passive,ok>                         179          1          -    Covered              
+            bin <bit3_passive,ok>                         183          1          -    Covered              
+            bin <bit2_passive,ok>                         178          1          -    Covered              
+            bin <bit1_passive,ok>                         185          1          -    Covered              
+            bin <bit0_passive,ok>                         171          1          -    Covered              
+
+COVERGROUP COVERAGE:
+----------------------------------------------------------------------------------------------------------
+Covergroup                                             Metric       Goal       Bins    Status               
+                                                                                                         
+----------------------------------------------------------------------------------------------------------
+ TYPE /tb_pkg/scoreboard/serial_to_parallel_covergrp 
+                                                      100.00%        100          -    Covered              
+    covered/total bins:                                    64         64          -                      
+    missing/total bins:                                     0         64          -                      
+    % Hit:                                            100.00%        100          -                      
+    Coverpoint reset                                  100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin reset                                         801          1          -    Covered              
+        bin run                                           801          1          -    Covered              
+    Coverpoint transmission                           100.00%        100          -    Covered              
+        covered/total bins:                                 3          3          -                      
+        missing/total bins:                                 0          3          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin ilde                                         2319          1          -    Covered              
+        bin active                                        595          1          -    Covered              
+        bin start_bit                                     762          1          -    Covered              
+    Coverpoint parity_error                           100.00%        100          -    Covered              
+        covered/total bins:                                 2          2          -                      
+        missing/total bins:                                 0          2          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin ok                                            325          1          -    Covered              
+        bin error                                         312          1          -    Covered              
+    Coverpoint data                                   100.00%        100          -    Covered              
+        covered/total bins:                                16         16          -                      
+        missing/total bins:                                 0         16          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin bit0_passive                                  304          1          -    Covered              
+        bin bit1_passive                                  332          1          -    Covered              
+        bin bit2_passive                                  315          1          -    Covered              
+        bin bit3_passive                                  335          1          -    Covered              
+        bin bit4_passive                                  320          1          -    Covered              
+        bin bit5_passive                                  302          1          -    Covered              
+        bin bit6_passive                                  312          1          -    Covered              
+        bin bit7_passive                                  308          1          -    Covered              
+        bin bit0_active                                   333          1          -    Covered              
+        bin bit1_active                                   305          1          -    Covered              
+        bin bit2_active                                   322          1          -    Covered              
+        bin bit3_active                                   302          1          -    Covered              
+        bin bit4_active                                   317          1          -    Covered              
+        bin bit5_active                                   335          1          -    Covered              
+        bin bit6_active                                   325          1          -    Covered              
+        bin bit7_active                                   329          1          -    Covered              
+    Coverpoint transmission_state                     100.00%        100          -    Covered              
+        covered/total bins:                                 3          3          -                      
+        missing/total bins:                                 0          3          -                      
+        % Hit:                                        100.00%        100          -                      
+        bin auto[IDLE]                                   2319          1          -    Covered              
+        bin auto[START_BIT]                               762          1          -    Covered              
+        bin auto[ACTIVE]                                  595          1          -    Covered              
+    Cross state_cross                                 100.00%        100          -    Covered              
+        covered/total bins:                                 6          6          -                      
+        missing/total bins:                                 0          6          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <auto[ACTIVE],run>                         18          1          -    Covered              
+            bin <auto[START_BIT],run>                      25          1          -    Covered              
+            bin <auto[IDLE],run>                          758          1          -    Covered              
+            bin <auto[ACTIVE],reset>                       13          1          -    Covered              
+            bin <auto[START_BIT],reset>                    19          1          -    Covered              
+            bin <auto[IDLE],reset>                        769          1          -    Covered              
+    Cross parity_cross                                100.00%        100          -    Covered              
+        covered/total bins:                                32         32          -                      
+        missing/total bins:                                 0         32          -                      
+        % Hit:                                        100.00%        100          -                      
+        Auto, Default and User Defined Bins:
+            bin <bit7_active,error>                       161          1          -    Covered              
+            bin <bit6_active,error>                       160          1          -    Covered              
+            bin <bit5_active,error>                       164          1          -    Covered              
+            bin <bit4_active,error>                       171          1          -    Covered              
+            bin <bit3_active,error>                       160          1          -    Covered              
+            bin <bit2_active,error>                       175          1          -    Covered              
+            bin <bit1_active,error>                       165          1          -    Covered              
+            bin <bit0_active,error>                       179          1          -    Covered              
+            bin <bit7_passive,error>                      151          1          -    Covered              
+            bin <bit6_passive,error>                      152          1          -    Covered              
+            bin <bit5_passive,error>                      148          1          -    Covered              
+            bin <bit4_passive,error>                      141          1          -    Covered              
+            bin <bit3_passive,error>                      152          1          -    Covered              
+            bin <bit2_passive,error>                      137          1          -    Covered              
+            bin <bit1_passive,error>                      147          1          -    Covered              
+            bin <bit0_passive,error>                      133          1          -    Covered              
+            bin <bit7_active,ok>                          168          1          -    Covered              
+            bin <bit6_active,ok>                          165          1          -    Covered              
+            bin <bit5_active,ok>                          171          1          -    Covered              
+            bin <bit4_active,ok>                          146          1          -    Covered              
+            bin <bit3_active,ok>                          142          1          -    Covered              
+            bin <bit2_active,ok>                          147          1          -    Covered              
+            bin <bit1_active,ok>                          140          1          -    Covered              
+            bin <bit0_active,ok>                          154          1          -    Covered              
+            bin <bit7_passive,ok>                         157          1          -    Covered              
+            bin <bit6_passive,ok>                         160          1          -    Covered              
+            bin <bit5_passive,ok>                         154          1          -    Covered              
+            bin <bit4_passive,ok>                         179          1          -    Covered              
+            bin <bit3_passive,ok>                         183          1          -    Covered              
+            bin <bit2_passive,ok>                         178          1          -    Covered              
+            bin <bit1_passive,ok>                         185          1          -    Covered              
+            bin <bit0_passive,ok>                         171          1          -    Covered              
+
+TOTAL COVERGROUP COVERAGE: 100.00%  COVERGROUP TYPES: 1
+
+Total Coverage By Instance (filtered view): 100.00%
+
