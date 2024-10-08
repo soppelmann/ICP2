@@ -45,11 +45,11 @@ class parity_test extends base_test;
       // in which we want to set m_serial_data_config.parity_enable = 1;
       // its something like this
       
+      m_top_config.m_serial_data_config.parity_enable = 1;
       // Create and build TB environment as defined in base test
       super.build_phase(phase);
-      m_top_config = top_config::type_id::create("m_top_config", this);
-      m_top_config.m_serial_data_config.parity_enable = 1;
-      super.m_top_config.m_serial_data_config.parity_enable = 1;
+  //    m_top_config = top_config::type_id::create("m_top_config", this);
+//      super.m_top_config.m_serial_data_config.parity_enable = 1;
    endfunction : build_phase
 
     //------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ class parity_test extends base_test;
     //------------------------------------------------------------------------------
     virtual task run_phase(uvm_phase phase);
         // Set number data transactions
-        no_of_data_loop = 80;
+        no_of_data_loop = 800;
         // Run the test as defined in base test
         super.run_phase(phase);
     endtask : run_phase
