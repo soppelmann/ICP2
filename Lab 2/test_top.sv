@@ -20,42 +20,42 @@ class RANDOMIZER;
    }
 
    // Constraint for operands
-   constraint operand_1_c {
-      operand_1 >= 8'd0 && operand_1 <= 8'd255;  // Full 8-bit range
-   }
-
-   constraint operand_2_c {
-      operand_2 >= 8'd0 && operand_2 <= 8'd255;  // Full 8-bit range
-   }
+   //   constraint operand_1_c {
+   //      operand_1 >= 8'd0 && operand_1 <= 8'd255;  // Full 8-bit range
+   //   }
+   //
+   //   constraint operand_2_c {
+   //      operand_2 >= 8'd0 && operand_2 <= 8'd255;  // Full 8-bit range
+   //   }
 
    // Special constraint for handling divide/modulo by zero when necessary
-   constraint no_div_by_zero {
-      if (op == DIV || op == MOD) {
-         operand_2 != 8'd0;  // Ensure operand_2 is not zero for division or modulo
-      }
-   }
-
-   // Constraints for preventing overflow in ADD
-   constraint add_no_overflow {
-      if (op == ADD) {
-         operand_1 + operand_2 <= 8'd255;  // Ensure no overflow for ADD
-      }
-   }
-
-
-   // Constraints for preventing underflow in SUB
-   constraint sub_no_underflow {
-      if (op == SUB) {
-         operand_1 >= operand_2;  // Ensure no underflow for SUB
-      }
-   }
-
-   // Constraints for unsigned MUL preventing overflow
-   constraint mul_no_overflow {
-      if (op == MUL) {
-         operand_1 * operand_2 <= 8'd255;  // Prevent overflow for MUL
-      }
-   }
+   //   constraint no_div_by_zero {
+   //      if (op == DIV || op == MOD) {
+   //         operand_2 != 8'd0;  // Ensure operand_2 is not zero for division or modulo
+   //      }
+   //   }
+   //
+   //   // Constraints for preventing overflow in ADD
+   //   constraint add_no_overflow {
+   //      if (op == ADD) {
+   //         operand_1 + operand_2 <= 8'd255;  // Ensure no overflow for ADD
+   //      }
+   //   }
+   //
+   //
+   //   // Constraints for preventing underflow in SUB
+   //   constraint sub_no_underflow {
+   //      if (op == SUB) {
+   //         operand_1 >= operand_2;  // Ensure no underflow for SUB
+   //      }
+   //   }
+   //
+   //   // Constraints for unsigned MUL preventing overflow
+   //   constraint mul_no_overflow {
+   //      if (op == MUL) {
+   //         operand_1 * operand_2 <= 8'd255;  // Prevent overflow for MUL
+   //      }
+   //   }
 endclass
 
 module simple_alu_tb;
@@ -171,10 +171,6 @@ module simple_alu_tb;
       tb_operand_1 <= a;
       tb_operand_2 <= b;
       tb_opcode <= code;
-      @(posedge tb_clock);
-      tb_operand_1 <= '0;
-      tb_operand_2 <= '0;
-      tb_start_bit <= 0;
    endtask
 
    //------------------------------------------------------------------------------
@@ -245,30 +241,38 @@ module simple_alu_tb;
    task test_case();
       reset(.delay(0), .length(2));
 
-
-      // Task 2 cont. do math with random operands
-      // task4 we reach 100% coverage
-      repeat (9001) begin
-         //for (int i = ADD; i <= MOD; i++) begin // how do with enum
-         for (
-             opcode tb_opcode = tb_opcode.first();
-             tb_opcode == tb_opcode.last;
-             tb_opcode = tb_opcode.next
-         ) begin
-            $display("do we hit our codes:   Opcode:%0s", tb_opcode.name());
-            do_math(randy.operand_1, randy.operand_2, tb_opcode);
-         end
-
+      //Cover all op codes
+      repeat (1501) begin
+                for (int i = ADD; i <= MOD; i++) begin
+         randy.randomize();
+                     do_math(randy.operand_1, randy.operand_2, opcode'(i));
+                  #10ns;
+         do_math(randy.operand_1, randy.operand_2, DIV);
+         #10ns;
       end
-      $stop;
+        end
 
-      repeat (9001) begin
-         do_math(randy.operand_1, randy.operand_2, randy.op);
+      #10ns;
+      // direct test for division by 1
+      for (int i = 0; i <= 255; i++) begin
+         do_math(i, 1, DIV);
+         #10ns;
       end
+
+      for (int i = 0; i <= 255; i++) begin
+         do_math(i, 1, MOD);
+         #10ns;
+      end
+
+
+              repeat(1501) begin
+                 randy.randomize();
+                  do_math(randy.operand_1, randy.operand_2, randy.op);
+                 #10ns;
+              end
 
       reset(.delay(10), .length(2));
       // Task 1: The DUT is causing this assertion to be hit...
-      // Fixed in simple_alu.sv by adding internal_result <= 0;
       assert (tb_result == 0) $display("Output reset");
       else $error("Reset doesn't clear output!");
 
